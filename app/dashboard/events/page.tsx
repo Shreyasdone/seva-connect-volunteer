@@ -16,8 +16,17 @@ export default function EventsPage() {
   const supabase = createClient()
 
   // Format date and time for display
-  const formatEventDate = (dateString) => {
-    return format(new Date(dateString), "MMMM d, yyyy")
+  const formatEventDate = (startDate, endDate) => {
+    const start = new Date(startDate)
+    const end = new Date(endDate)
+    
+    // If dates are the same, just show one date
+    if (start.toDateString() === end.toDateString()) {
+      return format(start, "MMMM d, yyyy")
+    }
+    
+    // If dates are different, show date range
+    return `${format(start, "MMM d")} - ${format(end, "MMM d, yyyy")}`
   }
 
   const formatEventTime = (startDate, endDate) => {
@@ -30,20 +39,45 @@ export default function EventsPage() {
       setLoading(true)
       
       try {
-        const { data, error } = await supabase
+        const { data: { user } } = await supabase.auth.getUser()
+        
+        if (!user) {
+          console.error("User not authenticated")
+          return
+        }
+
+        // First, get all events
+        const { data: eventsData, error: eventsError } = await supabase
           .from("events")
           .select("*")
           .order("start_date", { ascending: true })
         
-        if (error) {
-          console.error("Error fetching events:", error)
+        if (eventsError) {
+          console.error("Error fetching events:", eventsError)
           return
         }
+
+        // Then, get the user's registration status for these events
+        const { data: registrationData, error: registrationError } = await supabase
+          .from("volunteer_event")
+          .select("event_id, status")
+          .eq("volunteer_id", user.id)
+        
+        if (registrationError) {
+          console.error("Error fetching registration status:", registrationError)
+          return
+        }
+
+        // Create a map of event_id to registration status
+        const registrationMap = new Map(
+          registrationData.map(item => [item.event_id, item.status])
+        )
         
         // Process the data to add formatted date and time for display
-        const processedEvents = data.map(event => ({
+        const processedEvents = eventsData.map(event => ({
           ...event,
-          formattedDate: formatEventDate(event.start_date),
+          registrationStatus: registrationMap.get(event.id) || "not registered",
+          formattedDate: formatEventDate(event.start_date, event.end_date),
           formattedTime: formatEventTime(event.start_date, event.end_date)
         }))
         
@@ -58,7 +92,7 @@ export default function EventsPage() {
     fetchEvents()
   }, [])
 
-  const handleExpressInterest = async (eventId) => {
+  const handleRegister = async (eventId) => {
     try {
       const { data: { user } } = await supabase.auth.getUser()
       
@@ -67,25 +101,26 @@ export default function EventsPage() {
         return
       }
       
-      // You might want to create a table for user event interests
+      // Register the user for the event
       const { error } = await supabase
-        .from("event_interests")
+        .from("volunteer_event")
         .upsert({ 
-          user_id: user.id,
+          volunteer_id: user.id,
           event_id: eventId,
+          status: "registered",
           created_at: new Date().toISOString()
         })
       
       if (error) {
-        console.error("Error expressing interest:", error)
+        console.error("Error registering for event:", error)
         return
       }
       
-      // Close the dialog after successful expression of interest
+      // Close the dialog after successful registration
       setSelectedEvent(null)
       
-      // You might want to show a success message or update UI
-      console.log(`Successfully expressed interest in event ${eventId}`)
+      // Refresh the events list
+      fetchEvents()
     } catch (error) {
       console.error("Error:", error)
     }
@@ -124,8 +159,12 @@ export default function EventsPage() {
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="font-semibold text-red-900 text-lg">{event.title}</h3>
-                    <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
-                      {event.event_category}
+                    <span className={`text-xs px-2 py-1 rounded-full ${
+                      event.registrationStatus === "registered" 
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}>
+                      {event.registrationStatus === "registered" ? "Registered" : "Not Registered"}
                     </span>
                   </div>
                   
@@ -140,8 +179,14 @@ export default function EventsPage() {
                     </div>
                     <div className="flex items-center">
                       <MapPin className="h-4 w-4 mr-2 text-red-600" />
-                      {event.location}
+                      {event.location} ({event.location_type})
                     </div>
+                    {event.registration_deadline && (
+                      <div className="flex items-center">
+                        <Clock className="h-4 w-4 mr-2 text-red-600" />
+                        Register by: {format(new Date(event.registration_deadline), "MMM d, yyyy")}
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -155,7 +200,7 @@ export default function EventsPage() {
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
                 <DialogTitle className="text-xl text-red-900">{selectedEvent.title}</DialogTitle>
-                <DialogDescription>{selectedEvent.event_category}</DialogDescription>
+                <DialogDescription>{selectedEvent.location_type}</DialogDescription>
               </DialogHeader>
               
               <div className="mt-4">
@@ -186,7 +231,7 @@ export default function EventsPage() {
                     <h4 className="font-medium text-gray-900">Location</h4>
                     <div className="flex items-center text-sm text-gray-600">
                       <MapPin className="h-4 w-4 mr-2 text-red-600" />
-                      {selectedEvent.location}
+                      {selectedEvent.location} ({selectedEvent.location_type})
                     </div>
                   </div>
                 </div>
@@ -199,26 +244,15 @@ export default function EventsPage() {
                     </p>
                   </div>
                 )}
-                
-                <div className="mb-4">
-                  <h4 className="font-medium text-gray-900 mb-2">Status</h4>
-                  <span className={`text-sm px-2 py-1 rounded-full ${
-                    selectedEvent.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
-                    selectedEvent.status === 'ongoing' ? 'bg-green-100 text-green-800' :
-                    selectedEvent.status === 'completed' ? 'bg-gray-100 text-gray-800' :
-                    'bg-red-100 text-red-800'
-                  }`}>
-                    {selectedEvent.status.charAt(0).toUpperCase() + selectedEvent.status.slice(1)}
-                  </span>
-                </div>
               </div>
 
               <DialogFooter>
                 <Button 
                   className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900"
-                  onClick={() => handleExpressInterest(selectedEvent.id)}
+                  onClick={() => handleRegister(selectedEvent.id)}
+                  disabled={selectedEvent.registrationStatus === "registered"}
                 >
-                  Express Interest
+                  {selectedEvent.registrationStatus === "registered" ? "Already Registered" : "Register"}
                 </Button>
                 <DialogClose asChild>
                   <Button variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">

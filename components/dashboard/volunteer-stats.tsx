@@ -13,7 +13,7 @@ export default function VolunteerStats() {
           <div className="flex flex-col items-center p-4 bg-red-50 rounded-lg">
             <Clock className="h-8 w-8 text-red-600 mb-2" />
             <h3 className="text-2xl font-bold text-red-900">0</h3>
-            <p className="text-sm text-gray-600">Hours Volunteered</p>
+            <p className="text-sm text-gray-600">Tasks excecuted</p>
           </div>
 
           <div className="flex flex-col items-center p-4 bg-red-50 rounded-lg">
