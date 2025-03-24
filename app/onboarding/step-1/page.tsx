@@ -39,7 +39,7 @@ export default function OnboardingStep1() {
 
       // Update profile with step 1 data
       const { error } = await supabase
-        .from("profiles")
+        .from("volunteers")
         .update({
           full_name: fullName,
           mobile_number: mobile,

@@ -16,7 +16,7 @@ export default async function Dashboard() {
   }
 
   // Check if onboarding is complete
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
+  const { data: profile } = await supabase.from("volunteers").select("*").eq("id", user.id).single()
 
   if (!profile?.onboarding_completed) {
     redirect(`/onboarding/step-${profile?.onboarding_step || 1}`)

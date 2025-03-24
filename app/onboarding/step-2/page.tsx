@@ -15,7 +15,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 export default function OnboardingStep2() {
   const [workTypes, setWorkTypes] = useState<string[]>([])
-  const [preferredLocation, setPreferredLocation] = useState("")
+  const [isVirtual, setIsVirtual] = useState(false)
+  const [isInPerson, setIsInPerson] = useState(false)
+  const [placeName, setPlaceName] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -29,7 +31,7 @@ export default function OnboardingStep2() {
       } = await supabase.auth.getUser()
 
       if (user) {
-        const { data: profile } = await supabase.from("profiles").select("onboarding_step").eq("id", user.id).single()
+        const { data: profile } = await supabase.from("volunteers").select("onboarding_step").eq("id", user.id).single()
 
         if (profile?.onboarding_step < 2) {
           router.push("/onboarding/step-1")
@@ -78,8 +80,14 @@ export default function OnboardingStep2() {
       return
     }
 
-    if (!preferredLocation) {
-      setError("Please select a preferred location")
+    if (!isVirtual && !isInPerson) {
+      setError("Please select at least one location type")
+      setLoading(false)
+      return
+    }
+
+    if (isInPerson && !placeName.trim()) {
+      setError("Please enter a place name for in-person volunteering")
       setLoading(false)
       return
     }
@@ -94,12 +102,22 @@ export default function OnboardingStep2() {
         return
       }
 
+      // Format preferred location based on selections
+      let formattedLocation = ""
+      if (isVirtual && !isInPerson) {
+        formattedLocation = "virtual"
+      } else if (!isVirtual && isInPerson) {
+        formattedLocation = placeName.trim()
+      } else if (isVirtual && isInPerson) {
+        formattedLocation = `virtual, ${placeName.trim()}`
+      }
+
       // Update profile with step 2 data
       const { error } = await supabase
-        .from("profiles")
+        .from("volunteers")
         .update({
           work_types: workTypes,
-          preferred_location: preferredLocation,
+          preferred_location: formattedLocation,
           onboarding_step: 3,
         })
         .eq("id", user.id)
@@ -151,19 +169,44 @@ export default function OnboardingStep2() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="location">Preferred Location</Label>
-            <Select value={preferredLocation} onValueChange={setPreferredLocation}>
-              <SelectTrigger id="location">
-                <SelectValue placeholder="Select a location" />
-              </SelectTrigger>
-              <SelectContent>
-                {locationOptions.map((option) => (
-                  <SelectItem key={option.id} value={option.id}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label>Preferred Location</Label>
+            <div className="space-y-4">
+              <div className="flex flex-col space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="virtual"
+                    checked={isVirtual}
+                    onCheckedChange={(checked) => setIsVirtual(checked as boolean)}
+                  />
+                  <Label htmlFor="virtual" className="cursor-pointer">
+                    Virtual
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="in-person"
+                    checked={isInPerson}
+                    onCheckedChange={(checked) => setIsInPerson(checked as boolean)}
+                  />
+                  <Label htmlFor="in-person" className="cursor-pointer">
+                    In Person
+                  </Label>
+                </div>
+              </div>
+              {isInPerson && (
+                <div className="space-y-2">
+                  <Label htmlFor="placeName">Place Name</Label>
+                  <input
+                    type="text"
+                    id="placeName"
+                    value={placeName}
+                    onChange={(e) => setPlaceName(e.target.value)}
+                    placeholder="Enter city or location name"
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex justify-between pt-4">
             <Button

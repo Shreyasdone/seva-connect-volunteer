@@ -12,7 +12,7 @@ export default async function Home() {
   if (user) {
     // Check if onboarding is complete
     const { data: profile } = await supabase
-      .from("profiles")
+      .from("volunteers")
       .select("onboarding_completed, onboarding_step")
       .eq("id", user.id)
       .single()

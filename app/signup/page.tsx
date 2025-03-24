@@ -53,7 +53,7 @@ export default function SignupPage() {
       } = await supabase.auth.getUser()
 
       if (user) {
-        await supabase.from("profiles").insert({
+        await supabase.from("volunteers").insert({
           id: user.id,
           email: user.email,
           onboarding_step: 1,

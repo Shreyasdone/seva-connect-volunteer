@@ -32,7 +32,7 @@ export default function OnboardingStep3() {
       } = await supabase.auth.getUser()
 
       if (user) {
-        const { data: profile } = await supabase.from("profiles").select("onboarding_step").eq("id", user.id).single()
+        const { data: profile } = await supabase.from("volunteers").select("onboarding_step").eq("id", user.id).single()
 
         if (profile?.onboarding_step < 3) {
           router.push("/onboarding/step-2")
@@ -61,10 +61,19 @@ export default function OnboardingStep3() {
   ]
 
   const handleDayChange = (id: string, checked: boolean) => {
+    if (id === "weekend") {
+      if (checked) {
+        setDaysAvailable(prev => [...new Set([...prev, "saturday", "sunday"])])
+      } else {
+        setDaysAvailable(prev => prev.filter(day => day !== "saturday" && day !== "sunday"))
+      }
+      return
+    }
+
     if (checked) {
-      setDaysAvailable([...daysAvailable, id])
+      setDaysAvailable(prev => [...prev, id])
     } else {
-      setDaysAvailable(daysAvailable.filter((day) => day !== id))
+      setDaysAvailable(prev => prev.filter(day => day !== id))
     }
   }
 
@@ -103,7 +112,7 @@ export default function OnboardingStep3() {
 
       // Update profile with step 3 data and mark onboarding as complete
       const { error } = await supabase
-        .from("profiles")
+        .from("volunteers")
         .update({
           availability_start_date: startDate.toISOString(),
           availability_end_date: endDate?.toISOString() || null,
@@ -171,19 +180,36 @@ export default function OnboardingStep3() {
           </div>
           <div className="space-y-4">
             <Label>Days Available</Label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {dayOptions.map((option) => (
-                <div key={option.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={option.id}
-                    checked={daysAvailable.includes(option.id)}
-                    onCheckedChange={(checked) => handleDayChange(option.id, checked as boolean)}
-                  />
-                  <Label htmlFor={option.id} className="cursor-pointer">
-                    {option.label}
-                  </Label>
-                </div>
-              ))}
+            <div className="space-y-6">
+              {/* Weekend Button */}
+              <div className="flex items-center space-x-3 p-4 bg-red-50 rounded-lg border border-red-100">
+                <Checkbox
+                  id="weekend"
+                  className="h-5 w-5"
+                  checked={daysAvailable.includes("saturday") && daysAvailable.includes("sunday")}
+                  onCheckedChange={(checked) => handleDayChange("weekend", checked as boolean)}
+                />
+                <Label htmlFor="weekend" className="cursor-pointer text-lg font-semibold text-red-900">
+                  Weekends
+                </Label>
+              </div>
+
+              {/* All Days */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {dayOptions.map((option) => (
+                  <div key={option.id} 
+                    className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-md transition-colors">
+                    <Checkbox
+                      id={option.id}
+                      checked={daysAvailable.includes(option.id)}
+                      onCheckedChange={(checked) => handleDayChange(option.id, checked as boolean)}
+                    />
+                    <Label htmlFor={option.id} className="cursor-pointer">
+                      {option.label}
+                    </Label>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className="flex justify-between pt-4">

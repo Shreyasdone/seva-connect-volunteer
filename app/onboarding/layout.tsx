@@ -18,7 +18,7 @@ export default async function OnboardingLayout({
   }
 
   // Check if onboarding is already completed
-  const { data: profile } = await supabase.from("profiles").select("onboarding_completed").eq("id", user.id).single()
+  const { data: profile } = await supabase.from("volunteers").select("onboarding_completed").eq("id", user.id).single()
 
   if (profile?.onboarding_completed) {
     redirect("/dashboard")
