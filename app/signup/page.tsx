@@ -34,7 +34,8 @@ export default function SignupPage() {
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      // First, sign up the user
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -42,29 +43,37 @@ export default function SignupPage() {
         },
       })
 
-      if (error) {
-        setError(error.message)
+      if (signUpError) {
+        setError(signUpError.message)
         return
       }
 
-      // Create a profile record
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      if (!signUpData.user) {
+        setError("Failed to create user account")
+        return
+      }
 
-      if (user) {
-        await supabase.from("volunteers").insert({
-          id: user.id,
-          email: user.email,
+      // Then, create the volunteer profile
+      const { error: profileError } = await supabase
+        .from("volunteers")
+        .insert({
+          id: signUpData.user.id,
+          email: signUpData.user.email,
           onboarding_step: 1,
           onboarding_completed: false,
         })
+
+      if (profileError) {
+        console.error("Error creating profile:", profileError)
+        setError("Failed to create profile. Please try again.")
+        return
       }
 
+      // If everything is successful, redirect to onboarding
       router.push("/onboarding/step-1")
-      router.refresh()
     } catch (err) {
-      setError("An unexpected error occurred")
+      console.error("Signup error:", err)
+      setError("An unexpected error occurred. Please try again.")
     } finally {
       setLoading(false)
     }

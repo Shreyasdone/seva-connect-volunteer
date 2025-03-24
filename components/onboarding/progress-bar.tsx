@@ -5,12 +5,11 @@ import { CheckCircle2 } from "lucide-react"
 
 export default function OnboardingProgress() {
   const pathname = usePathname()
-  const currentStep = pathname.includes("step-1") ? 1 : pathname.includes("step-2") ? 2 : 3
+  const currentStep = pathname.includes("step-1") ? 1 : 2
 
   const steps = [
     { id: 1, name: "Personal Information" },
     { id: 2, name: "Work Preferences" },
-    { id: 3, name: "Availability" },
   ]
 
   return (

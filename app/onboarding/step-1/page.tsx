@@ -27,6 +27,24 @@ export default function OnboardingStep1() {
     setLoading(true)
     setError(null)
 
+    if (!fullName.trim()) {
+      setError("Please enter your full name")
+      setLoading(false)
+      return
+    }
+
+    if (!mobile.trim()) {
+      setError("Please enter your mobile number")
+      setLoading(false)
+      return
+    }
+
+    if (!age.trim() || isNaN(Number(age))) {
+      setError("Please enter a valid age")
+      setLoading(false)
+      return
+    }
+
     try {
       const {
         data: { user },
@@ -34,30 +52,33 @@ export default function OnboardingStep1() {
 
       if (!user) {
         setError("You must be logged in")
+        setLoading(false)
         return
       }
 
       // Update profile with step 1 data
-      const { error } = await supabase
+      const { error: updateError } = await supabase
         .from("volunteers")
         .update({
-          full_name: fullName,
-          mobile_number: mobile,
+          full_name: fullName.trim(),
+          mobile_number: mobile.trim(),
           age: Number.parseInt(age),
-          organization: organization,
+          organization: organization.trim(),
           onboarding_step: 2,
         })
         .eq("id", user.id)
 
-      if (error) {
-        setError(error.message)
+      if (updateError) {
+        console.error("Error updating profile:", updateError)
+        setError(updateError.message)
+        setLoading(false)
         return
       }
 
       router.push("/onboarding/step-2")
     } catch (err) {
-      setError("An unexpected error occurred")
-    } finally {
+      console.error("Error in step 1:", err)
+      setError("An unexpected error occurred. Please try again.")
       setLoading(false)
     }
   }

@@ -366,11 +366,21 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="startDate">Start Date</Label>
-                  <DatePicker id="startDate" date={startDate} onSelect={setStartDate} placeholder="Select start date" />
+                  <DatePicker 
+                    id="startDate" 
+                    date={startDate} 
+                    onSelect={setStartDate} 
+                    placeholder="Select start date" 
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="endDate">End Date (Optional)</Label>
-                  <DatePicker id="endDate" date={endDate} onSelect={setEndDate} placeholder="Select end date" />
+                  <DatePicker 
+                    id="endDate" 
+                    date={endDate} 
+                    onSelect={setEndDate} 
+                    placeholder="Select end date" 
+                  />
                 </div>
               </div>
               <div className="space-y-2">
@@ -396,11 +406,11 @@ export default function ProfilePage() {
                     <Checkbox
                       id="weekend"
                       className="h-5 w-5"
-                      checked={daysAvailable.includes("saturday") && daysAvailable.includes("sunday")}
+                      checked={daysAvailable.length === 2 && daysAvailable.includes("saturday") && daysAvailable.includes("sunday")}
                       onCheckedChange={(checked) => handleDayChange("weekend", checked as boolean)}
                     />
                     <Label htmlFor="weekend" className="cursor-pointer text-lg font-semibold text-red-900">
-                      Weekends
+                      Weekends Only
                     </Label>
                   </div>
 

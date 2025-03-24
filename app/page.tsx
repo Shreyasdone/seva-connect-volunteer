@@ -55,7 +55,7 @@ export default async function Home() {
               </div>
               <div className="rounded-xl overflow-hidden shadow-xl">
                 <img
-                  src="/placeholder.svg?height=550&width=550"
+                  src="https://samarthanam.org/wp-content/uploads/2023/10/samarthanam-logo.jpg?height=550&width=550"
                   alt="Volunteers working together"
                   className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
                 />

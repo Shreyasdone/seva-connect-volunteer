@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/utils/supabase/server"
 import DashboardHeader from "@/components/dashboard/header"
-import UserProfile from "@/components/dashboard/user-profile"
+import AvailabilityCalendar from "@/components/dashboard/availability-calendar"
 import VolunteerStats from "@/components/dashboard/volunteer-stats"
-import UpcomingOpportunities from "@/components/dashboard/upcoming-opportunities"
+import UpcomingEvents from "@/components/dashboard/upcoming-opportunities"
 
 export default async function Dashboard() {
   const supabase = createClient()
@@ -30,12 +30,12 @@ export default async function Dashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1">
-            <UserProfile profile={profile} />
+            <AvailabilityCalendar userId={user.id}/>
           </div>
           <div className="md:col-span-2">
             <div className="space-y-6">
               <VolunteerStats />
-              <UpcomingOpportunities />
+              <UpcomingEvents />
             </div>
           </div>
         </div>

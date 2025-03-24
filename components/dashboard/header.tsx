@@ -48,7 +48,7 @@ export default function DashboardHeader() {
                 <Link href="/dashboard/profile">Profile</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/dashboard/opportunities">Opportunities</Link>
+                <Link href="/dashboard/events">Events</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut}>
@@ -63,8 +63,8 @@ export default function DashboardHeader() {
           <Link href="/dashboard" className="text-gray-700 hover:text-red-600">
             Dashboard
           </Link>
-          <Link href="/dashboard/opportunities" className="text-gray-700 hover:text-red-600">
-            Opportunities
+          <Link href="/dashboard/events" className="text-gray-700 hover:text-red-600">
+            Events
           </Link>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

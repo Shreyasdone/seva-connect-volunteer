@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 
 export default function OnboardingStep2() {
@@ -26,16 +25,32 @@ export default function OnboardingStep2() {
   // Check if user has completed step 1
   useEffect(() => {
     const checkStep = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
 
-      if (user) {
-        const { data: profile } = await supabase.from("volunteers").select("onboarding_step").eq("id", user.id).single()
+        if (!user) {
+          router.push("/login")
+          return
+        }
 
-        if (profile?.onboarding_step < 2) {
+        const { data: profile, error } = await supabase
+          .from("volunteers")
+          .select("onboarding_step")
+          .eq("id", user.id)
+          .single()
+
+        if (error) {
+          console.error("Error checking step:", error)
+          return
+        }
+
+        if (!profile || profile.onboarding_step < 2) {
           router.push("/onboarding/step-1")
         }
+      } catch (err) {
+        console.error("Error in checkStep:", err)
       }
     }
 
@@ -50,15 +65,6 @@ export default function OnboardingStep2() {
     { id: "events", label: "Event Organization" },
     { id: "tech", label: "Technical Support" },
     { id: "admin", label: "Administrative Work" },
-  ]
-
-  const locationOptions = [
-    { id: "remote", label: "Remote Only" },
-    { id: "local", label: "Local Community" },
-    { id: "city", label: "City-wide" },
-    { id: "regional", label: "Regional" },
-    { id: "national", label: "National" },
-    { id: "international", label: "International" },
   ]
 
   const handleWorkTypeChange = (id: string, checked: boolean) => {
@@ -99,6 +105,7 @@ export default function OnboardingStep2() {
 
       if (!user) {
         setError("You must be logged in")
+        setLoading(false)
         return
       }
 
@@ -113,24 +120,27 @@ export default function OnboardingStep2() {
       }
 
       // Update profile with step 2 data
-      const { error } = await supabase
+      const { error: updateError } = await supabase
         .from("volunteers")
         .update({
           work_types: workTypes,
           preferred_location: formattedLocation,
-          onboarding_step: 3,
+          onboarding_step: 2,
+          onboarding_completed: true,
         })
         .eq("id", user.id)
 
-      if (error) {
-        setError(error.message)
+      if (updateError) {
+        console.error("Error updating profile:", updateError)
+        setError(updateError.message)
+        setLoading(false)
         return
       }
 
-      router.push("/onboarding/step-3")
+      router.push("/dashboard")
     } catch (err) {
-      setError("An unexpected error occurred")
-    } finally {
+      console.error("Error in step 2:", err)
+      setError("An unexpected error occurred. Please try again.")
       setLoading(false)
     }
   }
@@ -140,20 +150,20 @@ export default function OnboardingStep2() {
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-red-900">Work Preferences</CardTitle>
         <CardDescription>
-          Let us know what type of volunteer work you're interested in and your preferred location.
+          Tell us what kind of volunteer work you're interested in and where you'd like to volunteer.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          <div className="space-y-4">
-            <Label>What type of volunteer work are you interested in?</Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label>Work Types</Label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {workTypeOptions.map((option) => (
                 <div key={option.id} className="flex items-center space-x-2">
                   <Checkbox
@@ -222,7 +232,7 @@ export default function OnboardingStep2() {
               className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Continue"}
+              {loading ? "Saving..." : "Complete"}
             </Button>
           </div>
         </form>
