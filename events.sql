@@ -10,6 +10,7 @@ start_date TIMESTAMP NOT NULL,
 end_date TIMESTAMP NOT NULL,
 registration_deadline TIMESTAMP,
 max_volunteers INT DEFAULT 25,
+email_sent BOOLEAN DEFAULT FALSE;
 status TEXT NOT NULL CHECK (status IN ('draft', 'published', 'archived')) DEFAULT 'draft',
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

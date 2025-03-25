@@ -646,7 +646,7 @@ export default function EventDetailsPage() {
                     <TableCell>{task.task_description}</TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-2">
-                        {task.commonSkills.length > 0 ? (
+                        {task?.commonSkills?.length > 0 ? (
                           task.commonSkills.map((skill, index) => (
                             <span 
                               key={index}
@@ -663,7 +663,7 @@ export default function EventDetailsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-2">
-                        {task.missingSkills.length > 0 ? (
+                        {task?.missingSkills?.length > 0 ? (
                           task.missingSkills.map((skill, index) => (
                             <span 
                               key={index}
