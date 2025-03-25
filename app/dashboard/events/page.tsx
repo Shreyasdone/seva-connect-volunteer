@@ -10,8 +10,8 @@ import { createClient } from "@/utils/supabase/client"
 import { format } from "date-fns"
 
 export default function EventsPage() {
-  const [selectedEvent, setSelectedEvent] = useState(null)
-  const [events, setEvents] = useState([])
+  const [selectedEvent, setSelectedEvent] = useState<any>(null)
+  const [events, setEvents] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
@@ -126,6 +126,68 @@ export default function EventsPage() {
     }
   }
 
+  // Filter events by registration status
+  const registeredEvents = events.filter(event => event.registrationStatus === "registered")
+  const nonRegisteredEvents = events.filter(event => event.registrationStatus !== "registered")
+
+  interface EventCardProps {
+    event: {
+      id: string;
+      title: string;
+      location: string;
+      location_type: string;
+      thumbnail_image?: string;
+      formattedDate: string;
+      formattedTime: string;
+      registration_deadline?: string;
+      registrationStatus: string;
+    };
+    showDeadline?: boolean;
+  }
+
+  // Event Card component to avoid repetition
+  const EventCard = ({ event, showDeadline = true }: EventCardProps) => (
+    <Card 
+      key={event.id}
+      className="overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
+      onClick={() => setSelectedEvent(event)}
+    >
+      <div className="h-48 overflow-hidden">
+        <img 
+          src={event.thumbnail_image || "/placeholder.svg?height=300&width=500"} 
+          alt={event.title} 
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <CardContent className="p-4">
+        <div className="flex justify-between items-start mb-3">
+          <h3 className="font-semibold text-red-900 text-lg">{event.title}</h3>
+        </div>
+        
+        <div className="space-y-2 text-gray-600 text-sm">
+          <div className="flex items-center">
+            <CalendarDays className="h-4 w-4 mr-2 text-red-600" />
+            {event.formattedDate}
+          </div>
+          <div className="flex items-center">
+            <Clock className="h-4 w-4 mr-2 text-red-600" />
+            {event.formattedTime}
+          </div>
+          <div className="flex items-center">
+            <MapPin className="h-4 w-4 mr-2 text-red-600" />
+            {event.location} ({event.location_type})
+          </div>
+          {showDeadline && event.registration_deadline && (
+            <div className="flex items-center">
+              <Clock className="h-4 w-4 mr-2 text-red-600" />
+              Register by: {format(new Date(event.registration_deadline), "MMM d, yyyy")}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-white">
       <DashboardHeader />
@@ -142,55 +204,38 @@ export default function EventsPage() {
             <p className="text-gray-500">Check back later for upcoming volunteer opportunities.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((event) => (
-              <Card 
-                key={event.id}
-                className="overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
-                onClick={() => setSelectedEvent(event)}
-              >
-                <div className="h-48 overflow-hidden">
-                  <img 
-                    src={event.thumbnail_image || "/placeholder.svg?height=300&width=500"} 
-                    alt={event.title} 
-                    className="w-full h-full object-cover"
-                  />
+          <div className="space-y-12">
+            {/* Registered Events Section */}
+            <div>
+              <h2 className="text-2xl font-bold text-red-900 mb-4">Registered Events</h2>
+              {registeredEvents.length === 0 ? (
+                <div className="bg-white p-6 rounded-lg shadow text-center">
+                  <p className="text-gray-500">You haven't registered for any events yet.</p>
                 </div>
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-semibold text-red-900 text-lg">{event.title}</h3>
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      event.registrationStatus === "registered" 
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}>
-                      {event.registrationStatus === "registered" ? "Registered" : "Not Registered"}
-                    </span>
-                  </div>
-                  
-                  <div className="space-y-2 text-gray-600 text-sm">
-                    <div className="flex items-center">
-                      <CalendarDays className="h-4 w-4 mr-2 text-red-600" />
-                      {event.formattedDate}
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="h-4 w-4 mr-2 text-red-600" />
-                      {event.formattedTime}
-                    </div>
-                    <div className="flex items-center">
-                      <MapPin className="h-4 w-4 mr-2 text-red-600" />
-                      {event.location} ({event.location_type})
-                    </div>
-                    {event.registration_deadline && (
-                      <div className="flex items-center">
-                        <Clock className="h-4 w-4 mr-2 text-red-600" />
-                        Register by: {format(new Date(event.registration_deadline), "MMM d, yyyy")}
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {registeredEvents.map((event) => (
+                    <EventCard key={event.id} event={event} showDeadline={false} />
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            {/* All Events Section */}
+            <div>
+              <h2 className="text-2xl font-bold text-red-900 mb-4">All Events</h2>
+              {nonRegisteredEvents.length === 0 ? (
+                <div className="bg-white p-6 rounded-lg shadow text-center">
+                  <p className="text-gray-500">No additional events available at this time.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {nonRegisteredEvents.map((event) => (
+                    <EventCard key={event.id} event={event} showDeadline={true} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
         
@@ -236,7 +281,7 @@ export default function EventsPage() {
                   </div>
                 </div>
                 
-                {selectedEvent.registration_deadline && (
+                {selectedEvent.registration_deadline && selectedEvent.registrationStatus !== "registered" && (
                   <div className="mb-4">
                     <h4 className="font-medium text-gray-900 mb-2">Registration Deadline</h4>
                     <p className="text-sm text-gray-600">
