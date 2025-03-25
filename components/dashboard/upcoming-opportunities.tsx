@@ -143,12 +143,6 @@ export default function UpcomingEvents() {
                     <MapPin className="h-4 w-4 mr-2 text-red-600" />
                     {event.location} ({event.location_type})
                   </div>
-                  {event.registration_deadline && (
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Clock className="h-4 w-4 mr-2 text-red-600" />
-                      Register by: {format(new Date(event.registration_deadline), "MMM d, yyyy")}
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
