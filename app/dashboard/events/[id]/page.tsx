@@ -283,7 +283,7 @@ export default function EventDetailsPage() {
         .update({
           volunteer_id: user.id,
           volunteer_email: user.email,
-          task_status: "to do"
+          task_status: "assigned"
         })
         .in("task_id", selectedTasks)
       
