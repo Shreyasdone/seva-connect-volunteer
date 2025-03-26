@@ -5,6 +5,7 @@ import AvailabilityCalendar from "@/components/dashboard/availability-calendar"
 import VolunteerStats from "@/components/dashboard/volunteer-stats"
 import UpcomingEvents from "@/components/dashboard/upcoming-opportunities"
 import MyTasksWidget from "@/components/dashboard/my-tasks-widget"
+import RecentDiscussions from "@/components/dashboard/recent-discussions"
 
 interface DashboardContentProps {
   profile: {
@@ -24,6 +25,7 @@ export default function DashboardContent({ profile, userId }: DashboardContentPr
           <div className="space-y-8">
             <VolunteerStats />
             <UpcomingEvents />
+            <RecentDiscussions />
           </div>
           <div className="space-y-8">
             <MyTasksWidget />
