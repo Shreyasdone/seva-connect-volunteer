@@ -2,6 +2,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { createClient } from "@/utils/supabase/server"
 import { Button } from "@/components/ui/button"
+import LatestEvents from "@/components/landing/latest-events"
 
 export default async function Home() {
   const supabase = createClient()
@@ -63,6 +64,7 @@ export default async function Home() {
             </div>
           </div>
         </section>
+        <LatestEvents />
       </main>
     </div>
   )

@@ -5,7 +5,7 @@ import DashboardHeader from "@/components/dashboard/header"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog"
-import { CalendarDays, MapPin, Clock, Filter, X, ChevronDown } from "lucide-react"
+import { CalendarDays, MapPin, Clock, Filter, X, ChevronDown, AlertCircle } from "lucide-react"
 import { createClient } from "@/utils/supabase/client"
 import { format, addDays, addMonths, isAfter, isBefore, parseISO } from "date-fns"
 import { 
@@ -30,6 +30,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { DatePicker } from "@/components/ui/date-picker"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
 
 const BATCH_SIZE = 5
 
@@ -66,6 +67,9 @@ export default function EventsPage() {
     start: null,
     end: null
   })
+
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+  const [isRegistering, setIsRegistering] = useState(false)
 
   // Format date and time for display
   const formatEventDate = (startDate: string, endDate: string) => {
@@ -145,11 +149,12 @@ export default function EventsPage() {
   }, [])
 
   const handleRegister = async (eventId: string) => {
+    setIsRegistering(true)
     try {
       const { data: { user } } = await supabase.auth.getUser()
       
       if (!user) {
-        console.error("User not authenticated")
+        toast.error("Please log in to register for events")
         return
       }
       
@@ -165,16 +170,24 @@ export default function EventsPage() {
       
       if (error) {
         console.error("Error registering for event:", error)
+        toast.error("Failed to register for the event. Please try again.")
         return
       }
       
-      // Close the dialog after successful registration
+      // Show success message
+      toast.success("Successfully registered for the event!")
+      
+      // Close both dialogs
+      setShowConfirmDialog(false)
       setSelectedEvent(null)
       
       // Refresh the events list
       fetchEvents()
     } catch (error) {
       console.error("Error:", error)
+      toast.error("An unexpected error occurred. Please try again.")
+    } finally {
+      setIsRegistering(false)
     }
   }
 
@@ -884,7 +897,7 @@ export default function EventsPage() {
                     </Button>
                     <Button 
                       className="bg-red-800 hover:bg-red-900"
-                      onClick={() => handleRegister(selectedEvent.id)}
+                      onClick={() => setShowConfirmDialog(true)}
                       disabled={new Date() > new Date(selectedEvent.registration_deadline || selectedEvent.start_date)}
                     >
                       Register
@@ -894,6 +907,44 @@ export default function EventsPage() {
               </DialogFooter>
             </DialogContent>
           )}
+        </Dialog>
+
+        {/* Registration Confirmation Dialog */}
+        <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-xl text-red-900">Confirm Registration</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to register for this event?
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="py-4">
+              <div className="flex items-start space-x-3 text-sm text-gray-600">
+                <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                <p>
+                  By registering, you commit to attending the event. Please ensure you are available on the scheduled date and time.
+                </p>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                className="border-red-800 text-red-800 hover:bg-red-50"
+                onClick={() => setShowConfirmDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="bg-red-800 hover:bg-red-900"
+                onClick={() => handleRegister(selectedEvent.id)}
+                disabled={isRegistering}
+              >
+                {isRegistering ? "Registering..." : "Confirm Registration"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
         </Dialog>
       </main>
     </div>

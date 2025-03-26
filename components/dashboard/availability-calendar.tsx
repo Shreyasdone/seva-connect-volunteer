@@ -263,8 +263,8 @@ export default function AvailabilityCalendar({ userId }) {
                 <Label htmlFor="startDate">Start Date</Label>
                 <DatePicker 
                   id="startDate" 
-                  date={availabilityStartDate} 
-                  onSelect={setAvailabilityStartDate} 
+                  value={availabilityStartDate} 
+                  onChange={(date) => setAvailabilityStartDate(date || undefined)} 
                   placeholder="Select start date" 
                 />
               </div>
@@ -272,8 +272,8 @@ export default function AvailabilityCalendar({ userId }) {
                 <Label htmlFor="endDate">End Date (Optional)</Label>
                 <DatePicker 
                   id="endDate" 
-                  date={availabilityEndDate} 
-                  onSelect={setAvailabilityEndDate} 
+                  value={availabilityEndDate} 
+                  onChange={(date) => setAvailabilityEndDate(date || undefined)} 
                   placeholder="Select end date" 
                 />
               </div>

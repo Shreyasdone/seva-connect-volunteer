@@ -532,9 +532,9 @@ export default function EventDetailsPage() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="to do">To Do</SelectItem>
-                            <SelectItem value="doing">Doing</SelectItem>
-                            <SelectItem value="done">Done</SelectItem>
+                            <SelectItem value="assigned">Assigned</SelectItem>
+                            <SelectItem value="inprogress">In Progress</SelectItem>
+                            <SelectItem value="complete">Complete</SelectItem>
                           </SelectContent>
                         </Select>
                       </TableCell>

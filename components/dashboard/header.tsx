@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/utils/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -12,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { User, LogOut, Menu } from "lucide-react"                                                                                                                                                                                                                                                            
+import { User, LogOut, Menu } from "lucide-react"
 
 export default function DashboardHeader() {
   const router = useRouter()
@@ -27,8 +28,15 @@ export default function DashboardHeader() {
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/dashboard" className="text-xl font-bold text-red-900">
-          Volunteer Hub
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <Image
+            src="/samarthanam-logo.jpg"
+            alt="Samarthanam Logo"
+            width={80}
+            height={80}
+            className="rounded-full"
+          />
+          <span className="text-xl font-bold text-red-900">Samarthanam Saarthi</span>
         </Link>
 
         <div className="md:hidden">
