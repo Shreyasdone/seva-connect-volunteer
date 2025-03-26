@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useParams } from "next/navigation"
 import DashboardHeader from "@/components/dashboard/header"
 import { Button } from "@/components/ui/button"
@@ -38,6 +38,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Label } from "@/components/ui/label"
+import EventChat from "@/components/events/EventChat"
 
 interface TaskSkill {
   skills: {
@@ -492,89 +493,100 @@ export default function EventDetailsPage() {
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-white">
       <DashboardHeader />
       <main className="container mx-auto px-4 py-8">
-        {/* My Tasks */}
-        <Card className="mb-8">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-red-900">My Tasks</h2>
-              <Button 
-                className={`bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 ${
-                  !hasChanges ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                onClick={handleSubmitChanges}
-                disabled={!hasChanges}
-              >
-                Submit Changes
-              </Button>
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Notes</TableHead>
-                  <TableHead className="w-[100px]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {assignedTasks.map((task) => (
-                  <TableRow key={task.task_id}>
-                    <TableCell>{task.task_description}</TableCell>
-                    <TableCell>
-                      <Select
-                        value={task.task_status}
-                        onValueChange={(value) => handleTaskChange(task.task_id, 'task_status', value)}
-                      >
-                        <SelectTrigger className="w-[120px]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="to do">To Do</SelectItem>
-                          <SelectItem value="doing">Doing</SelectItem>
-                          <SelectItem value="done">Done</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </TableCell>
-                    <TableCell>
-                      <Textarea
-                        value={task.task_feedback || ""}
-                        placeholder="Add Notes..."
-                        onChange={(e) => handleTaskChange(task.task_id, 'task_feedback', e.target.value)}
-                        className="min-h-[80px]"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-800">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>De-assign Task</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Are you sure you want to de-assign this task? This will remove it from your assigned tasks.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDeassignTask(task.task_id)}
-                              className="bg-red-600 hover:bg-red-700"
-                            >
-                              De-assign
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </TableCell>
+        {/* Top section with My Tasks and Chat side by side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* My Tasks */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-red-900">My Tasks</h2>
+                <Button 
+                  className={`bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 ${
+                    !hasChanges ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  onClick={handleSubmitChanges}
+                  disabled={!hasChanges}
+                >
+                  Submit Changes
+                </Button>
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Notes</TableHead>
+                    <TableHead className="w-[100px]">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+                </TableHeader>
+                <TableBody>
+                  {assignedTasks.map((task) => (
+                    <TableRow key={task.task_id}>
+                      <TableCell>{task.task_description}</TableCell>
+                      <TableCell>
+                        <Select
+                          value={task.task_status}
+                          onValueChange={(value) => handleTaskChange(task.task_id, 'task_status', value)}
+                        >
+                          <SelectTrigger className="w-[120px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="to do">To Do</SelectItem>
+                            <SelectItem value="doing">Doing</SelectItem>
+                            <SelectItem value="done">Done</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
+                        <Textarea
+                          value={task.task_feedback || ""}
+                          placeholder="Add Notes..."
+                          onChange={(e) => handleTaskChange(task.task_id, 'task_feedback', e.target.value)}
+                          className="min-h-[80px]"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-800">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>De-assign Task</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to de-assign this task? This will remove it from your assigned tasks.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeassignTask(task.task_id)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                De-assign
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+
+          {/* Volunteer Chat */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-2xl font-bold text-red-900 mb-4">Volunteer Chat</h2>
+              <EventChat eventId={Number(params.id)} />
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Event Details */}
         <Card className="mb-8">
