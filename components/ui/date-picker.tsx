@@ -7,27 +7,36 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface DatePickerProps {
-  date?: Date
-  onSelect: (date: Date | undefined) => void
+  value?: Date | null
+  onChange: (date: Date | null) => void
   placeholder?: string
   id?: string
 }
 
-export function DatePicker({ date, onSelect, placeholder = "Pick a date", id }: DatePickerProps) {
+export function DatePicker({ value, onChange, placeholder = "Pick a date", id }: DatePickerProps) {
+  const handleSelect = (date: Date | undefined) => {
+    onChange(date || null)
+  }
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           id={id}
           variant={"outline"}
-          className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
+          className={cn("w-full justify-start text-left font-normal", !value && "text-muted-foreground")}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>{placeholder}</span>}
+          {value ? format(value, "PPP") : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar mode="single" selected={date} onSelect={onSelect} initialFocus />
+        <Calendar 
+          mode="single" 
+          selected={value || undefined} 
+          onSelect={handleSelect}
+          initialFocus 
+        />
       </PopoverContent>
     </Popover>
   )
