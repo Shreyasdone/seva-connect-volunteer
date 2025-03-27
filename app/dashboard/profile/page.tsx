@@ -550,8 +550,8 @@ export default function ProfilePage() {
                     <Label htmlFor="startDate">Start Date</Label>
                     <DatePicker 
                       id="startDate" 
-                      date={startDate} 
-                      onSelect={setStartDate} 
+                      value={startDate} 
+                      onChange={(date) => setStartDate(date || undefined)} 
                       placeholder="Select start date" 
                     />
                   </div>
@@ -559,8 +559,8 @@ export default function ProfilePage() {
                     <Label htmlFor="endDate">End Date (Optional)</Label>
                     <DatePicker 
                       id="endDate" 
-                      date={endDate} 
-                      onSelect={setEndDate} 
+                      value={endDate} 
+                      onChange={(date) => setEndDate(date || undefined)} 
                       placeholder="Select end date" 
                     />
                   </div>

@@ -2,6 +2,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { createClient } from "@/utils/supabase/server"
 import { Button } from "@/components/ui/button"
+import LatestEvents from "@/components/landing/latest-events"
 
 export default async function Home() {
   const supabase = createClient()
@@ -55,7 +56,7 @@ export default async function Home() {
               </div>
               <div className="rounded-xl overflow-hidden shadow-xl">
                 <img
-                  src="https://samarthanam.org/wp-content/uploads/2023/10/samarthanam-logo.jpg?height=550&width=550"
+                  src="https://samarthanam.org/wp-content/uploads/2023/10/samarthanam-logo.jpg?height=550&width=900"
                   alt="Volunteers working together"
                   className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
                 />
@@ -63,6 +64,7 @@ export default async function Home() {
             </div>
           </div>
         </section>
+        <LatestEvents />
       </main>
     </div>
   )

@@ -6,6 +6,8 @@ import { CalendarDays, MapPin, Clock } from "lucide-react"
 import { createClient } from "@/utils/supabase/client"
 import { format } from "date-fns"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export default function UpcomingEvents() {
   const [events, setEvents] = useState([])
@@ -105,8 +107,14 @@ export default function UpcomingEvents() {
             <p className="text-gray-500">Loading events...</p>
           </div>
         ) : events.length === 0 ? (
-          <div className="p-4 text-center">
+          <div className="p-4 text-center space-y-4">
             <p className="text-gray-500">You haven't registered for any events yet.</p>
+            <p className="text-sm text-gray-600">Visit our events page to browse and register for upcoming opportunities.</p>
+            <Link href="/dashboard/events">
+              <Button className="mt-2 bg-red-600 hover:bg-red-700">
+                Browse Events
+              </Button>
+            </Link>
           </div>
         ) : (
           <div className="flex gap-4 overflow-x-auto pb-4">

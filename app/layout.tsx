@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { AccessibilityProvider } from '../components/AccessibilityProvider'
+import AccessibilityMenu from '../components/AccessibilityMenu'
+import ColorBlindnessFilters from '../components/ColorBlindnessFilters'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'Sevaconnect Volunteer portal',
+  description: 'Made with ❤️ by Parth Kulkarni',
 }
 
 export default function RootLayout({
@@ -14,7 +16,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AccessibilityProvider>
+          {children}
+          <AccessibilityMenu />
+          <ColorBlindnessFilters />
+        </AccessibilityProvider>
+      </body>
     </html>
   )
 }
