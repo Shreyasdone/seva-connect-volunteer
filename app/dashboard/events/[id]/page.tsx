@@ -718,16 +718,14 @@ export default function EventDetailsPage() {
         <Card>
           <CardContent className="p-6">
             <h2 className="text-2xl font-bold text-red-900 mb-2">Event Feedback</h2>
-            <p className="text-gray-600 mb-6">
-              Your feedback is invaluable to Samarthanam Trust for the Disabled. It helps us improve our volunteer events, 
+            <p className="text-body">Your feedback is invaluable to Samarthanam Trust for the Disabled. It helps us improve our volunteer events, 
               better support our community, and create more meaningful experiences for everyone involved. 
               Your insights directly contribute to our mission of empowering persons with disabilities through quality education, 
-              training, and rehabilitation.
-            </p>
+              training, and rehabilitation.</p>
 
             <div className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="star-rating" className="text-md font-medium">How would you rate this event?</Label>
+                <Label htmlFor="star-rating" className="text-label">How would you rate this event?</Label>
                 <div className="flex items-center space-x-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -743,7 +741,7 @@ export default function EventDetailsPage() {
                       <Star className="h-8 w-8 fill-current" />
                     </button>
                   ))}
-                  <span className="ml-2 text-sm text-gray-500">
+                  <span className="ml-2 text-caption">
                     {starRating === 1 && "Poor"}
                     {starRating === 2 && "Fair"}
                     {starRating === 3 && "Good"}
@@ -755,7 +753,7 @@ export default function EventDetailsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="feedback" className="text-md font-medium">Share your thoughts about this event</Label>
+                <Label htmlFor="feedback" className="text-label">Share your thoughts about this event</Label>
                 <Textarea
                   id="feedback"
                   placeholder="What did you like? What could be improved? Any other comments?"
@@ -776,7 +774,7 @@ export default function EventDetailsPage() {
               </div>
 
               {existingFeedback && (
-                <div className="p-4 bg-green-50 border border-green-100 rounded-md text-green-800 text-sm">
+                <div className="p-4 bg-green-50 border border-green-100 rounded-md text-green-800 text-caption">
                   You have already submitted feedback for this event. You can update it if you'd like.
                 </div>
               )}

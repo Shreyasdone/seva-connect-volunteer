@@ -150,7 +150,7 @@ export default function MyTasksWidget() {
     return (
       <Card>
         <CardContent className="p-6">
-          <p className="text-gray-500">Loading tasks...</p>
+          <p className="text-body-small">Loading tasks...</p>
         </CardContent>
       </Card>
     )
@@ -219,7 +219,7 @@ export default function MyTasksWidget() {
             ))}
             {tasks.length === 0 && (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-gray-500">
+                <TableCell colSpan={4} className="text-center text-body-small text-gray-500">
                   No tasks assigned yet
                 </TableCell>
               </TableRow>

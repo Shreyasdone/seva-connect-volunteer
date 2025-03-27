@@ -47,6 +47,7 @@ body {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -81,6 +82,67 @@ body {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  body {
+    @apply font-sans antialiased;
+  }
+
+  /* Typography Scale */
+  h1 {
+    @apply text-4xl font-bold tracking-tight text-red-900;
+  }
+
+  h2 {
+    @apply text-3xl font-bold tracking-tight text-red-900;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold tracking-tight text-red-900;
+  }
+
+  h4 {
+    @apply text-xl font-semibold tracking-tight text-red-900;
+  }
+
+  h5 {
+    @apply text-lg font-semibold tracking-tight text-red-900;
+  }
+
+  h6 {
+    @apply text-base font-semibold tracking-tight text-red-900;
+  }
+
+  /* Body Text */
+  .text-body-large {
+    @apply text-lg leading-relaxed text-gray-700;
+  }
+
+  .text-body {
+    @apply text-base leading-relaxed text-gray-700;
+  }
+
+  .text-body-small {
+    @apply text-sm leading-relaxed text-gray-600;
+  }
+
+  /* Labels and Form Elements */
+  .text-label {
+    @apply text-sm font-medium text-gray-900;
+  }
+
+  .text-caption {
+    @apply text-xs text-gray-500;
+  }
+
+  /* Interactive Elements */
+  .text-button {
+    @apply text-sm font-medium;
+  }
+
+  /* Status and Badges */
+  .text-badge {
+    @apply text-xs font-medium;
   }
 }
 

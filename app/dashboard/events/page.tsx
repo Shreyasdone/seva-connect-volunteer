@@ -52,11 +52,15 @@ export default function EventsPage() {
     "not registered": false,
   })
   const [categoryFilters, setCategoryFilters] = useState<Record<string, boolean>>({
-    A: false,
-    B: false,
-    C: false,
-    D: false,
-    E: false,
+    Education: false,
+    Blog: false,
+    Culture: false,
+    Rehabilitation: false,
+    Environment: false,
+    'Audio Recording': false,
+    'Field Work': false,
+    Sports: false,
+    'Employment & Entrepreneurship': false,
   })
   const [eventTypeFilters, setEventTypeFilters] = useState<Record<string, boolean>>({
     physical: false,
@@ -418,11 +422,15 @@ export default function EventsPage() {
       })
     } else if (filterType === 'category') {
       setCategoryFilters({
-        A: false,
-        B: false,
-        C: false,
-        D: false,
-        E: false,
+        Education: false,
+        Blog: false,
+        Culture: false,
+        Rehabilitation: false,
+        Environment: false,
+        'Audio Recording': false,
+        'Field Work': false,
+        Sports: false,
+        'Employment & Entrepreneurship': false,
       })
     } else if (filterType === 'eventType') {
       setEventTypeFilters({
@@ -477,7 +485,7 @@ export default function EventsPage() {
               className="px-3 py-1 h-auto text-xs border-red-200 text-red-800 hover:bg-red-50"
               onClick={() => {
                 setRegistrationFilters({registered: false, "not registered": false})
-                setCategoryFilters({A: false, B: false, C: false, D: false, E: false})
+                setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false, 'Employment & Entrepreneurship': false})
                 setEventTypeFilters({physical: false, virtual: false})
                 setTimeFilter("all")
                 setCustomDateRange({ start: null, end: null })
@@ -510,7 +518,7 @@ export default function EventsPage() {
           >
             <div className="p-4">
               <div className="mb-4 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-black">Filter Options</h2>
+                <h2 className="text-h4">Filter Options</h2>
                 <Button 
                   variant="ghost" 
                   size="sm"
@@ -547,7 +555,7 @@ export default function EventsPage() {
                     className="px-3 py-1 h-auto text-xs border-red-200 text-red-800 hover:bg-red-50"
                     onClick={() => {
                       setRegistrationFilters({registered: false, "not registered": false})
-                      setCategoryFilters({A: false, B: false, C: false, D: false, E: false})
+                      setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false, 'Employment & Entrepreneurship': false})
                       setEventTypeFilters({physical: false, virtual: false})
                       setTimeFilter("all")
                       setCustomDateRange({ start: null, end: null })
@@ -561,9 +569,7 @@ export default function EventsPage() {
               <div className="space-y-6 overflow-y-auto pr-2 pb-6">
                 {/* Registration Status Filter */}
                 <div>
-                  <h3 className="text-sm font-medium text-black mb-3">
-                    Registration Status
-                  </h3>
+                  <h3 className="text-label">Registration Status</h3>
                   <div className="space-y-2">
                     {Object.entries(registrationFilters).map(([status, checked]) => (
                       <div key={status} className="flex items-center space-x-2">
@@ -588,9 +594,7 @@ export default function EventsPage() {
                 
                 {/* Event Type Filter */}
                 <div>
-                  <h3 className="text-sm font-medium text-black mb-3">
-                    Event Type
-                  </h3>
+                  <h3 className="text-label">Event Type</h3>
                   <div className="space-y-2">
                     {Object.entries(eventTypeFilters).map(([type, checked]) => (
                       <div key={type} className="flex items-center space-x-2">
@@ -615,9 +619,7 @@ export default function EventsPage() {
                 
                 {/* Category Filter */}
                 <div>
-                  <h3 className="text-sm font-medium text-black mb-3">
-                    Event Category
-                  </h3>
+                  <h3 className="text-label">Event Category</h3>
                   <div className="grid grid-cols-1 gap-2">
                     {Object.entries(categoryFilters).map(([category, checked]) => (
                       <div key={category} className="flex items-center space-x-2">
@@ -633,7 +635,7 @@ export default function EventsPage() {
                           htmlFor={`category-${category}`}
                           className="text-sm text-black cursor-pointer"
                         >
-                          Category {category}
+                          {category}
                         </Label>
                       </div>
                     ))}
@@ -642,9 +644,7 @@ export default function EventsPage() {
                 
                 {/* Time Filter */}
                 <div>
-                  <h3 className="text-sm font-medium text-black mb-3">
-                    Time Period
-                  </h3>
+                  <h3 className="text-label">Time Period</h3>
                   <Select value={timeFilter} onValueChange={setTimeFilter}>
                     <SelectTrigger className="border-red-200 focus:ring-red-500 text-black">
                       <SelectValue placeholder="Filter by time" />
@@ -662,18 +662,14 @@ export default function EventsPage() {
                 {timeFilter === "custom" && (
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-black mb-2">
-                        Start Date
-                      </label>
+                      <label className="text-label">Start Date</label>
                       <DatePicker
                         value={customDateRange.start}
                         onChange={(date) => setCustomDateRange(prev => ({ ...prev, start: date }))}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-black mb-2">
-                        End Date
-                      </label>
+                      <label className="text-label">End Date</label>
                       <DatePicker
                         value={customDateRange.end}
                         onChange={(date) => setCustomDateRange(prev => ({ ...prev, end: date }))}
@@ -688,7 +684,7 @@ export default function EventsPage() {
                     className="w-full border-red-800 text-red-800 hover:bg-red-50"
                     onClick={() => {
                       setRegistrationFilters({registered: false, "not registered": false})
-                      setCategoryFilters({A: false, B: false, C: false, D: false, E: false})
+                      setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false, 'Employment & Entrepreneurship': false})
                       setEventTypeFilters({physical: false, virtual: false})
                       setTimeFilter("all")
                       setCustomDateRange({ start: null, end: null })
@@ -720,7 +716,7 @@ export default function EventsPage() {
                     <h2 className="text-2xl font-bold text-red-900 mb-4">Registered Events</h2>
                     {visibleRegisteredEvents.length === 0 ? (
                       <div className="bg-white p-6 rounded-lg shadow text-center">
-                        <p className="text-gray-500">You haven't registered for any upcoming events that match your filters.</p>
+                        <p className="text-body-small">You haven't registered for any upcoming events that match your filters.</p>
                       </div>
                     ) : (
                       <>
@@ -756,7 +752,7 @@ export default function EventsPage() {
                   <h2 className="text-2xl font-bold text-red-900 mb-4">Upcoming Events</h2>
                   {visibleUpcomingEvents.length === 0 ? (
                     <div className="bg-white p-6 rounded-lg shadow text-center">
-                      <p className="text-gray-500">No upcoming events match your filters.</p>
+                      <p className="text-body-small">No upcoming events match your filters.</p>
                     </div>
                   ) : (
                     <>
@@ -791,7 +787,7 @@ export default function EventsPage() {
                   <h2 className="text-2xl font-bold text-red-900 mb-4">Past Events</h2>
                   {visiblePastEvents.length === 0 ? (
                     <div className="bg-white p-6 rounded-lg shadow text-center">
-                      <p className="text-gray-500">No past events match your filters.</p>
+                      <p className="text-body-small">No past events match your filters.</p>
                     </div>
                   ) : (
                     <>
@@ -830,7 +826,7 @@ export default function EventsPage() {
           {selectedEvent && (
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
-                <DialogTitle className="text-xl text-red-900">{selectedEvent.title}</DialogTitle>
+                <DialogTitle className="text-h4">{selectedEvent.title}</DialogTitle>
                 <DialogDescription>{selectedEvent.location_type}</DialogDescription>
               </DialogHeader>
               
@@ -873,8 +869,8 @@ export default function EventsPage() {
                 </div>
                 
                 <div className="py-2">
-                  <h3 className="font-medium mb-2">Description</h3>
-                  <p className="text-sm text-gray-600">{selectedEvent.description || "No description available for this event."}</p>
+                  <h3 className="text-label">Description</h3>
+                  <p className="text-body-small">{selectedEvent.description || "No description available for this event."}</p>
                 </div>
               </div>
 
