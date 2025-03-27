@@ -54,13 +54,19 @@ export default async function Home() {
                   </Link>
                 </div>
               </div>
-              <div className="rounded-xl overflow-hidden shadow-xl">
-                <img
-                  src="https://samarthanam.org/wp-content/uploads/2023/10/samarthanam-logo.jpg?height=550&width=900"
-                  alt="Volunteers working together"
-                  className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
-                />
-              </div>
+<div className="rounded-xl overflow-hidden shadow-xl">
+
+  <img
+
+    src="https://samarthanam.org/wp-content/uploads/2023/10/samarthanam-logo.jpg"
+
+    alt="Volunteers working together"
+
+    className="mx-auto w-full h-auto object-contain rounded-xl"
+
+  />
+
+</div>
             </div>
           </div>
         </section>
