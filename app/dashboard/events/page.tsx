@@ -51,11 +51,14 @@ export default function EventsPage() {
     "not registered": false,
   })
   const [categoryFilters, setCategoryFilters] = useState<Record<string, boolean>>({
-    A: false,
-    B: false,
-    C: false,
-    D: false,
-    E: false,
+    Education: false,
+    Blog: false,
+    Culture: false,
+    Rehabilitation: false,
+    Environment: false,
+    'Audio Recording': false,
+    'Field Work': false,
+    Sports: false,
   })
   const [eventTypeFilters, setEventTypeFilters] = useState<Record<string, boolean>>({
     physical: false,
@@ -405,11 +408,14 @@ export default function EventsPage() {
       })
     } else if (filterType === 'category') {
       setCategoryFilters({
-        A: false,
-        B: false,
-        C: false,
-        D: false,
-        E: false,
+        Education: false,
+        Blog: false,
+        Culture: false,
+        Rehabilitation: false,
+        Environment: false,
+        'Audio Recording': false,
+        'Field Work': false,
+        Sports: false,
       })
     } else if (filterType === 'eventType') {
       setEventTypeFilters({
@@ -464,7 +470,7 @@ export default function EventsPage() {
               className="px-3 py-1 h-auto text-xs border-red-200 text-red-800 hover:bg-red-50"
               onClick={() => {
                 setRegistrationFilters({registered: false, "not registered": false})
-                setCategoryFilters({A: false, B: false, C: false, D: false, E: false})
+                setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false})
                 setEventTypeFilters({physical: false, virtual: false})
                 setTimeFilter("all")
                 setCustomDateRange({ start: null, end: null })
@@ -534,7 +540,7 @@ export default function EventsPage() {
                     className="px-3 py-1 h-auto text-xs border-red-200 text-red-800 hover:bg-red-50"
                     onClick={() => {
                       setRegistrationFilters({registered: false, "not registered": false})
-                      setCategoryFilters({A: false, B: false, C: false, D: false, E: false})
+                      setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false})
                       setEventTypeFilters({physical: false, virtual: false})
                       setTimeFilter("all")
                       setCustomDateRange({ start: null, end: null })
@@ -614,7 +620,7 @@ export default function EventsPage() {
                           htmlFor={`category-${category}`}
                           className="text-sm text-black cursor-pointer"
                         >
-                          Category {category}
+                          {category}
                         </Label>
                       </div>
                     ))}
@@ -663,7 +669,7 @@ export default function EventsPage() {
                     className="w-full border-red-800 text-red-800 hover:bg-red-50"
                     onClick={() => {
                       setRegistrationFilters({registered: false, "not registered": false})
-                      setCategoryFilters({A: false, B: false, C: false, D: false, E: false})
+                      setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false})
                       setEventTypeFilters({physical: false, virtual: false})
                       setTimeFilter("all")
                       setCustomDateRange({ start: null, end: null })
