@@ -60,6 +60,7 @@ export default function EventsPage() {
     'Audio Recording': false,
     'Field Work': false,
     Sports: false,
+    'Employment & Entrepreneurship': false,
   })
   const [eventTypeFilters, setEventTypeFilters] = useState<Record<string, boolean>>({
     physical: false,
@@ -429,6 +430,7 @@ export default function EventsPage() {
         'Audio Recording': false,
         'Field Work': false,
         Sports: false,
+        'Employment & Entrepreneurship': false,
       })
     } else if (filterType === 'eventType') {
       setEventTypeFilters({
@@ -483,7 +485,7 @@ export default function EventsPage() {
               className="px-3 py-1 h-auto text-xs border-red-200 text-red-800 hover:bg-red-50"
               onClick={() => {
                 setRegistrationFilters({registered: false, "not registered": false})
-                setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false})
+                setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false, 'Employment & Entrepreneurship': false})
                 setEventTypeFilters({physical: false, virtual: false})
                 setTimeFilter("all")
                 setCustomDateRange({ start: null, end: null })
@@ -553,7 +555,7 @@ export default function EventsPage() {
                     className="px-3 py-1 h-auto text-xs border-red-200 text-red-800 hover:bg-red-50"
                     onClick={() => {
                       setRegistrationFilters({registered: false, "not registered": false})
-                      setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false})
+                      setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false, 'Employment & Entrepreneurship': false})
                       setEventTypeFilters({physical: false, virtual: false})
                       setTimeFilter("all")
                       setCustomDateRange({ start: null, end: null })
@@ -682,7 +684,7 @@ export default function EventsPage() {
                     className="w-full border-red-800 text-red-800 hover:bg-red-50"
                     onClick={() => {
                       setRegistrationFilters({registered: false, "not registered": false})
-                      setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false})
+                      setCategoryFilters({Education: false, Blog: false, Culture: false, Rehabilitation: false, Environment: false, 'Audio Recording': false, 'Field Work': false, Sports: false, 'Employment & Entrepreneurship': false})
                       setEventTypeFilters({physical: false, virtual: false})
                       setTimeFilter("all")
                       setCustomDateRange({ start: null, end: null })

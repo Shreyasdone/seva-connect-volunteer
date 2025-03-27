@@ -5,7 +5,7 @@ location TEXT NOT NULL,
 location_type TEXT NOT NULL CHECK (location_type IN ('virtual', 'physical')),
 description TEXT,
 thumbnail_image TEXT, -- stores the image URL
-event_category TEXT NOT NULL CHECK (event_category IN ('Education', 'Blog', 'Culture', 'Rehabilitation', 'Environment', 'Audio Recording', 'Field Work', 'Sports')),
+event_category TEXT NOT NULL CHECK (event_category IN ('Education', 'Blog', 'Culture', 'Rehabilitation', 'Environment', 'Audio Recording', 'Field Work', 'Sports', 'Employment & Entrepreneurship')),
 start_date TIMESTAMP NOT NULL,
 end_date TIMESTAMP NOT NULL,
 registration_deadline TIMESTAMP,
