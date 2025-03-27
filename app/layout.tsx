@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { AccessibilityProvider } from '../components/AccessibilityProvider'
+import AccessibilityMenu from '../components/AccessibilityMenu'
+import ColorBlindnessFilters from '../components/ColorBlindnessFilters'
 
 export const metadata: Metadata = {
   title: 'Sevaconnect Volunteer portal',
@@ -13,7 +16,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AccessibilityProvider>
+          {children}
+          <AccessibilityMenu />
+          <ColorBlindnessFilters />
+        </AccessibilityProvider>
+      </body>
     </html>
   )
 }
