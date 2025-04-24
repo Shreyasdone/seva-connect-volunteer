@@ -1,5 +1,9 @@
-# Samarthanam Volunteer Dashboard
+# [Samarthanam Volunteer Dashboard](https://seva-connect-volunteer.vercel.app/)
 
+**Demo Credentials <br>
+email: shreyas.done22@vit.edu <br>
+password: 123456 <br>**
+<hr>
 A dedicated portal for volunteers to register, manage their profiles, discover events, and participate in community activities organized by Samarthanam.
 
 ## Project Overview
