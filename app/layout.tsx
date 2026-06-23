@@ -3,6 +3,7 @@ import './globals.css'
 import { AccessibilityProvider } from '../components/AccessibilityProvider'
 import AccessibilityMenu from '../components/AccessibilityMenu'
 import ColorBlindnessFilters from '../components/ColorBlindnessFilters'
+import { Toaster } from '@/components/ui/sonner'
 
 export const metadata: Metadata = {
   title: 'Sevaconnect Volunteer portal',
@@ -21,6 +22,7 @@ export default function RootLayout({
           {children}
           <AccessibilityMenu />
           <ColorBlindnessFilters />
+          <Toaster />
         </AccessibilityProvider>
       </body>
     </html>

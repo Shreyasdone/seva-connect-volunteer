@@ -8,9 +8,26 @@ export async function GET(request: NextRequest) {
   if (code) {
     const supabase = createClient()
     await supabase.auth.exchangeCodeForSession(code)
+
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (user) {
+      const { data: profile } = await supabase
+        .from("volunteers")
+        .select("onboarding_completed, onboarding_step")
+        .eq("id", user.id)
+        .single()
+
+      if (profile?.onboarding_completed) {
+        return NextResponse.redirect(requestUrl.origin + "/dashboard")
+      }
+
+      return NextResponse.redirect(
+        requestUrl.origin + `/onboarding/step-${profile?.onboarding_step || 1}`
+      )
+    }
   }
 
-  // URL to redirect to after sign in process completes
   return NextResponse.redirect(requestUrl.origin + "/onboarding/step-1")
 }
 

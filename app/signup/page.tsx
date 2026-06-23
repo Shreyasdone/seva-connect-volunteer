@@ -56,24 +56,29 @@ export default function SignupPage() {
         return
       }
 
-      // Then, create the volunteer profile
-      const { error: profileError } = await supabase
-        .from("volunteers")
-        .insert({
-          id: signUpData.user.id,
-          email: signUpData.user.email,
-          onboarding_step: 1,
-          onboarding_completed: false,
-        })
+      // If there's an active session (email confirmation disabled), create the volunteer profile
+      if (signUpData.session) {
+        const { error: profileError } = await supabase
+          .from("volunteers")
+          .insert({
+            id: signUpData.user.id,
+            email: signUpData.user.email,
+            onboarding_step: 1,
+            onboarding_completed: false,
+          })
 
-      if (profileError) {
-        console.error("Error creating profile:", profileError)
-        setError("Failed to create profile. Please try again.")
-        return
+        if (profileError) {
+          console.error("Error creating profile:", profileError)
+          setError("Failed to create profile. Please try again.")
+          return
+        }
+
+        router.push("/onboarding/step-1")
+      } else {
+        // Email confirmation required — profile will be created after callback
+        setError(null)
+        router.push("/login?message=Check your email to confirm your account before logging in.")
       }
-
-      // If everything is successful, redirect to onboarding
-      router.push("/onboarding/step-1")
     } catch (err) {
       console.error("Signup error:", err)
       setError("An unexpected error occurred. Please try again.")

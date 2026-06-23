@@ -4,13 +4,13 @@ import type React from "react"
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { createClient } from "@/utils/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle } from "lucide-react"
+import { AlertCircle, CheckCircle2 } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function LoginPage() {
@@ -19,6 +19,8 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const message = searchParams.get("message")
   const supabase = createClient()
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -35,6 +37,28 @@ export default function LoginPage() {
       if (error) {
         setError(error.message)
         return
+      }
+
+      // Check if volunteer profile exists; create it if missing (email-confirmed flow)
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: profile } = await supabase
+          .from("volunteers")
+          .select("id")
+          .eq("id", user.id)
+          .single()
+
+        if (!profile) {
+          await supabase.from("volunteers").insert({
+            id: user.id,
+            email: user.email,
+            onboarding_step: 1,
+            onboarding_completed: false,
+          })
+          router.push("/onboarding/step-1")
+          router.refresh()
+          return
+        }
       }
 
       router.push("/dashboard")
@@ -57,6 +81,12 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
+            {message && (
+              <Alert>
+                <CheckCircle2 className="h-4 w-4" />
+                <AlertDescription>{message}</AlertDescription>
+              </Alert>
+            )}
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />

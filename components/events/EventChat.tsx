@@ -53,43 +53,27 @@ export default function EventChat({ eventId }: EventChatProps) {
           return
         }
 
-        // Get user profile info
-        const { data: profileData, error: profileError } = await supabase
-          .from("users")
-          .select("*")
+        // Get user profile info from volunteers table
+        const { data: volunteerData, error: volunteerError } = await supabase
+          .from("volunteers")
+          .select("full_name, email")
           .eq("id", user.id)
           .single()
-        
-        if (profileError) {
-          // Attempt to fetch from volunteer_profiles table as fallback
-          const { data: volunteerData, error: volunteerError } = await supabase
-            .from("volunteer_profiles")
-            .select("*")
-            .eq("id", user.id)
-            .single()
-          
-          if (volunteerError) {
-            // Use email as fallback
-            setUserInfo({
-              id: user.id,
-              name: user.email?.split('@')[0] || 'Anonymous',
-              email: user.email || ''
-            })
-            return
-          }
 
+        if (volunteerError) {
+          // Use email as fallback
           setUserInfo({
             id: user.id,
-            name: volunteerData.full_name || user.email?.split('@')[0] || 'Anonymous',
-            email: volunteerData.email || user.email || ''
+            name: user.email?.split('@')[0] || 'Anonymous',
+            email: user.email || ''
           })
           return
         }
 
         setUserInfo({
           id: user.id,
-          name: profileData.full_name || user.email?.split('@')[0] || 'Anonymous',
-          email: profileData.email || user.email || ''
+          name: volunteerData.full_name || user.email?.split('@')[0] || 'Anonymous',
+          email: volunteerData.email || user.email || ''
         })
       } catch (err) {
         console.error("Error getting user info:", err)
