@@ -54,19 +54,19 @@ export default async function Home() {
                   </Link>
                 </div>
               </div>
-<div className="rounded-xl overflow-hidden shadow-xl">
+              <div className="rounded-xl overflow-hidden shadow-xl">
 
-  <img
+                <img
 
-    src="https://samarthanam.org/wp-content/uploads/2023/10/samarthanam-logo.jpg"
+                  src="https://seva-connect-admin.vercel.app/samarthanam-logo.jpg"
 
-    alt="Volunteers working together"
+                  alt="Volunteers working together"
 
-    className="mx-auto w-full h-auto object-contain rounded-xl"
+                  className="mx-auto w-full h-auto object-contain rounded-xl"
 
-  />
+                />
 
-</div>
+              </div>
             </div>
           </div>
         </section>
